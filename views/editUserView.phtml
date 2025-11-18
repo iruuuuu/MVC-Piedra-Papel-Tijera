@@ -1,0 +1,32 @@
+<?php $user = $_SESSION['user']; ?>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="public/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Editar Perfil</h1>
+        <div class="profile-edit">
+            <img src="public/img/<?php echo htmlspecialchars($user->getAvatar() ?: 'default.png'); ?>" alt="Avatar actual" class="avatar large">
+            <h3><?php echo htmlspecialchars($user->getNombreUsuario()); ?></h3>
+        </div>
+
+        <form action="index.php?c=usuarios" method="post" enctype="multipart/form-data">
+            <label for="avatar">Cambiar avatar:</label>
+            <input type="file" name="avatar" id="avatar" required>
+            <input type="submit" name="setAvatar" value="Actualizar Avatar">
+        </form>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="index.php">Volver al juego</a>
+        </div>
+    </div>
+</body>
+
+</html>

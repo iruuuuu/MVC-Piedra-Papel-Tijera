@@ -1,0 +1,88 @@
+<?php
+// Recuperamos el objeto User de la sesión para un acceso más fácil.
+$user = $_SESSION['user'];
+
+// Recuperamos la información de la última jugada, si existe.
+$ultimaJugada = $_SESSION['ultima_jugada'] ?? null;
+
+// Limpiamos la última jugada de la sesión para que no se muestre en recargas posteriores.
+unset($_SESSION['ultima_jugada']);
+
+// Función para obtener la ruta de la imagen para la jugada (piedra, papel, tijera).
+function getChoiceImagePath($choice) {
+    // Asumimos que las imágenes están en public/img/ y se llaman piedra.png, papel.png, etc.
+    $basePath = 'public/img/';
+    $imageName = htmlspecialchars($choice);
+    // Devuelve la ruta completa de la imagen.
+    return $basePath . $imageName . '.png';
+}
+?>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piedra, Papel o Tijera</title>
+    <link rel="stylesheet" href="public/css/style.css">
+</head>
+
+<body>
+    <div class="container game-container">
+        <header class="game-header">
+            <div class="user-info">
+                <img src="public/img/<?php echo htmlspecialchars($user->getAvatar() ?: 'default.png'); ?>" alt="Avatar" class="avatar">
+                <span>Hola, <?php echo htmlspecialchars($user->getUsername()); ?></span>
+            </div>
+            <nav>
+                <a href="index.php?c=partidas&action=newgame">Nueva Partida</a>
+                <a href="index.php?c=usuarios&edit=1">Editar Perfil</a>
+                <a href="index.php?c=usuarios&logout=1">Cerrar Sesión</a>
+            </nav>
+        </header>
+
+        <?php if ($ultimaJugada): ?>
+            <div class="last-play">
+                <h3>Última Jugada:</h3>
+                <div class="play-details">
+                    <div class="choice-display">
+                        <p>Tu jugada:</p>
+                        <img src="<?php echo getChoiceImagePath($ultimaJugada['jugada_usuario']); ?>" alt="<?php echo htmlspecialchars($ultimaJugada['jugada_usuario']); ?>" class="choice-img">
+                    </div>
+                    <div class="result <?php echo strtolower(htmlspecialchars($ultimaJugada['resultado'])); ?>">
+                        <?php 
+                            // Traducimos el resultado para mostrarlo más amigable
+                            $resultadoTexto = [
+                                'victoria' => '¡GANASTE!',
+                                'derrota' => 'PERDISTE',
+                                'empate' => 'EMPATE'
+                            ];
+                            echo $resultadoTexto[$ultimaJugada['resultado']];
+                        ?>
+                    </div>
+                    <div class="choice-display">
+                        <p>Jugada de la máquina:</p>
+                        <img src="<?php echo getChoiceImagePath($ultimaJugada['jugada_maquina']); ?>" alt="<?php echo htmlspecialchars($ultimaJugada['jugada_maquina']); ?>" class="choice-img">
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <main class="game-board">
+            <h2>Elige tu jugada:</h2>
+            <form class="choices" action="index.php?c=partidas" method="POST">
+                <button type="submit" name="jugada" value="piedra" class="choice-btn">
+                    <img src="public/img/piedra.png" alt="Piedra">
+                </button>
+                <button type="submit" name="jugada" value="papel" class="choice-btn">
+                    <img src="public/img/papel.png" alt="Papel">
+                </button>
+                <button type="submit" name="jugada" value="tijera" class="choice-btn">
+                    <img src="public/img/tijera.png" alt="Tijera">
+                </button>
+            </form>
+        </main>
+    </div>
+</body>
+
+</html>

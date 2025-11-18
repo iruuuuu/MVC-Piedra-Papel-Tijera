@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="public/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Editar Perfil</h1>
+
+        <img src="public/img/<?php echo htmlspecialchars($_SESSION['user']->getAvatar() ?: 'default.png'); ?>" alt="Avatar actual" class="avatar large">
+
+        <form action="index.php?c=usuarios" method="POST" enctype="multipart/form-data">
+            <label for="avatar" style="margin-bottom: 10px;">Cambiar avatar:</label>
+            <input type="file" name="avatar" id="avatar" accept="image/png, image/jpeg, image/gif" required>
+            <input type="submit" name="edit_profile" value="Guardar Cambios">
+        </form>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="index.php">Volver al juego</a>
+        </div>
+    </div>
+</body>
+</html>
